@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { HotelModule } from './modules/hotel/hotel.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { HttpUtilModule } from './common/services/http/http.module';
+import { FlightModule } from './modules/flight/flight.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { HttpUtilModule } from './common/services/http/http.module';
     HttpUtilModule,
     HotelModule,
     AuthModule,
+    FlightModule,
   ],
   controllers: [AppController],
   providers: [AppService],
