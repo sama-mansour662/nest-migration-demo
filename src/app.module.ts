@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { HotelModule } from './modules/hotel/hotel.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { HttpUtilModule } from './common/services/http/http.module';
+import { OmsModule } from './common/repositories/oms.module';
 import { FlightModule } from './modules/flight/flight.module';
 
 @Module({
@@ -13,6 +14,7 @@ import { FlightModule } from './modules/flight/flight.module';
       isGlobal: true,
     }),
     HttpUtilModule,
+    OmsModule,
     HotelModule,
     AuthModule,
     FlightModule,

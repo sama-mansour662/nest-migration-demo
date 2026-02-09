@@ -1,22 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { HttpUtilService } from 'src/common/services/http/http.service';
-
+import { OmsRepository } from 'src/common/repositories/oms.repository';
 
 @Injectable()
 export class HotelRepository {
-  private readonly omsBaseUrl = process.env.OMS_SERVICE_API_URL_INTERNAL!;
-  constructor(private readonly httpUtilService: HttpUtilService) {}
-  async getOrderByNumber(orderNumber: string): Promise<any> {
-    try {
-      return this.httpUtilService.get(
-        `${this.omsBaseUrl}/order/order-number/${orderNumber}`,
-        { params: { 'response-format': 'sdk' } },
-      );
+  constructor(private readonly omsRepository: OmsRepository) {}
 
-    } catch (error: any) {
-      throw new Error(
-        `Failed to fetch OMS order [orderNumber=${orderNumber}]: ${error?.message || error}`,
-      );
-    }
+  async getOrderByNumber(orderNumber: string): Promise<any> {
+    return this.omsRepository.getOrderByNumber(orderNumber);
   }
 }
