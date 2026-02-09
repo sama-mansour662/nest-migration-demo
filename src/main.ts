@@ -15,7 +15,9 @@ async function bootstrap() {
     .setTitle('WhatsApp Nest API')
     .setDescription('API documentation')
     .setVersion('1.0')
-    .addBearerAuth()
+    // Define Bearer auth scheme + mark it required for operations that declare it
+    .addBearerAuth(undefined, 'bearer')
+    .addSecurityRequirements('bearer')
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);

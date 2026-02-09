@@ -7,10 +7,13 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { HotelInfoResponse } from './dto/HotelInfo';
 import { HotelService } from './hotel.service';
 
+@ApiTags('Hotel')
+@ApiBearerAuth('bearer')
 @Controller({ path: 'hotel', version: '1' })
 @UseGuards(JwtAuthGuard)
 export class HotelController {
