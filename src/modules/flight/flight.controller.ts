@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Controller, Post, Query, UseGuards } from '@nestjs/common';
 import { FlightService } from './flight.srevice';
 import { FlightSearchQuery } from './dto/flight.query';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -12,7 +12,7 @@ export class FlightController {
   @Post('flight-search')
   @FlightSearchDocs()
 
-  searchFlights(@Body() query: FlightSearchQuery) {
+  searchFlights(@Query() query: FlightSearchQuery) {
     return this.flightService.searchFlights(query);
   }
 }
