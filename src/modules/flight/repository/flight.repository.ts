@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { HttpUtilService } from 'src/common/services/http/http.service';
+import { CommonConfig } from 'src/common/config/common';
 @Injectable()
 export class FlightRepository {
     constructor(private readonly httpUtilService: HttpUtilService) { }
@@ -12,7 +13,7 @@ export class FlightRepository {
                         'Content-Type': 'application/json',
                         Accept: 'application/json',
                         Authorization: process.env.FLIGHT_SERVICE_API_KEY,
-                        'x-authorization': 'Bearer ' + process.env.FLIGHT_SERVICE_API_VALUE,
+                        'x-authorization': 'Bearer ' +  process.env.FLIGHT_SERVICE_API_VALUE,
                     },
                 },
             );

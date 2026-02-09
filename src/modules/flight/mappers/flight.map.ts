@@ -9,6 +9,7 @@ import { FlightLegSorter } from '../helpers/flight.sorter';
 import { FlightLegView } from '../types/flight.types';
 import { buildFlightLegViews } from '../helpers/flight.view-builder';
 
+
 @Injectable()
 export class FlightMapper {
   readonly queryBuilder = new FlightQueryBuilder();
@@ -17,7 +18,7 @@ export class FlightMapper {
 
   buildQueryString(query: FlightSearchQuery): string;
   buildQueryString(queryString: string, _query?: FlightSearchQuery): string;
-  @BuildQuery<FlightSearchQuery>()
+  @BuildQuery()
   buildQueryString(
     queryOrString: FlightSearchQuery | string,
     _query?: FlightSearchQuery,
@@ -31,8 +32,8 @@ export class FlightMapper {
     return candidates.length ? this.applyQuery(candidates, query) : [];
   }
 
-  @ApplyFilters<FlightLegView, FlightSearchQuery>()
-  @ApplySorter<FlightLegView, FlightSearchQuery>()
+  @ApplyFilters()
+  @ApplySorter()
   private applyQuery(items: FlightLegView[], _query: FlightSearchQuery): FlightLegView[] {
     return items;
   }

@@ -8,32 +8,24 @@ export class FlightLegFilters extends AbstractFilters<FlightLegView, FlightSearc
 
     if (query.onlyFlightsWithPrice) out = out.filter((i) => i.hasPrice);
 
-    if (query.airlineCode?.trim()) {
-      const airline = query.airlineCode.trim().toUpperCase();
-      out = out.filter(
-        (i) => (i.flightCode ?? '').toUpperCase().split('-')[0] === airline,
-      );
+    const airline = query.airlineCode?.trim()?.toUpperCase();
+    if (airline) {
+      out = out.filter((i) => (i.flightCode ?? '').toUpperCase().split('-')[0] === airline);
     }
 
     if (query.stopCount !== null && query.stopCount !== undefined) {
       out = out.filter((i) => i.stopCount === query.stopCount);
     }
 
-    if (query.legClass?.trim()) {
-      const desired = query.legClass.trim();
-      out = out.filter((i) => i.classOfLeg.includes(desired));
-    }
+    const legClass = query.legClass?.trim();
+    if (legClass) out = out.filter((i) => i.classOfLeg.includes(legClass));
 
-    if (query.fareFamily?.trim()) {
-      const desired = query.fareFamily.trim().toLowerCase();
-      out = out.filter((i) =>
-        i.fareFamilies.some((f) => f.toLowerCase() === desired),
-      );
+    const fareFamily = query.fareFamily?.trim()?.toLowerCase();
+    if (fareFamily) {
+      out = out.filter((i) => i.fareFamilies.some((f) => f.toLowerCase() === fareFamily));
     }
 
     // Preserve original behavior: limit BEFORE sorting (based on provider order).
-    const limit = query.limit ?? 20;
-    return out.slice(0, Number(limit));
+    return out.slice(0, Number(query.limit ?? 20));
   }
 }
-

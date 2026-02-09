@@ -5,36 +5,38 @@ import { FlightLegView } from '../types/flight.types';
 export class FlightLegSorter extends AbstractSorter<FlightLegView, FlightSearchQuery> {
   sort(items: FlightLegView[], query: FlightSearchQuery): FlightLegView[] {
     const sortBy = query.sortBy;
-    let sortOrder = query.sortOrder;
+    if (
+      !sortBy ||
+      (sortBy !== 'departureTime' &&
+        sortBy !== 'arrivalTime' &&
+        sortBy !== 'duration' &&
+        sortBy !== 'price')
+    ) {
+      return items;
+    }
 
-    const allowed = new Set(['departureTime', 'arrivalTime', 'duration', 'price']);
-    if (!sortBy || !allowed.has(sortBy)) return items;
+    const factor = query.sortOrder === 'desc' ? -1 : 1;
 
-    if (!sortOrder || (sortOrder !== 'asc' && sortOrder !== 'desc')) sortOrder = 'asc';
-    const factor = sortOrder === 'asc' ? 1 : -1;
+    const valueOf = (x: FlightLegView): string | number => {
+      switch (sortBy) {
+        case 'duration':
+          return parseDurationToMinutes(x.duration);
+        case 'departureTime':
+          return x.departureTime;
+        case 'arrivalTime':
+          return x.arrivalTime || '';
+        case 'price':
+          return x.price?.total != null
+            ? parseFloat(x.price.total.toString())
+            : Number.MAX_VALUE;
+      }
+    };
 
     return [...items].sort((a, b) => {
-      let aValue: string | number = '';
-      let bValue: string | number = '';
-
-      if (sortBy === 'duration') {
-        aValue = parseDurationToMinutes(a.duration);
-        bValue = parseDurationToMinutes(b.duration);
-      } else if (sortBy === 'departureTime') {
-        aValue = a.departureTime;
-        bValue = b.departureTime;
-      } else if (sortBy === 'arrivalTime') {
-        aValue = a.arrivalTime || '';
-        bValue = b.arrivalTime || '';
-      } else if (sortBy === 'price') {
-        aValue =
-          a.price?.total != null ? parseFloat(a.price.total.toString()) : Number.MAX_VALUE;
-        bValue =
-          b.price?.total != null ? parseFloat(b.price.total.toString()) : Number.MAX_VALUE;
-      }
-
-      if (aValue < bValue) return -1 * factor;
-      if (aValue > bValue) return 1 * factor;
+      const av = valueOf(a);
+      const bv = valueOf(b);
+      if (av < bv) return -1 * factor;
+      if (av > bv) return 1 * factor;
       return 0;
     });
   }

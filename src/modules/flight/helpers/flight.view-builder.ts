@@ -22,13 +22,9 @@ export function buildFlightLegViews(response: any): FlightLegView[] {
       .map((id) => segmentsById[id]?.fareFamily)
       .filter((v): v is string => typeof v === 'string' && v.trim() !== '');
 
-    const distinctFareFamilies = [...new Set(fareFamilies)];
+    const distinctFareFamilies = uniq(fareFamilies);
     const fareFamily: string | string[] | null =
-      distinctFareFamilies.length === 0
-        ? null
-        : distinctFareFamilies.length === 1
-          ? distinctFareFamilies[0]
-          : distinctFareFamilies;
+      distinctFareFamilies.length === 0 ? null : distinctFareFamilies.length === 1 ? distinctFareFamilies[0] : distinctFareFamilies;
 
     const classOfLeg = extractClassOfLeg(itinerary?.fare);
 
@@ -61,6 +57,10 @@ export function buildFlightLegViews(response: any): FlightLegView[] {
   }
 
   return out;
+}
+
+function uniq(arr: string[]): string[] {
+  return [...new Set(arr)];
 }
 
 function indexById<T>(
