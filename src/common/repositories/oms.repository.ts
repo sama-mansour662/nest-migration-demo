@@ -37,21 +37,7 @@ export class OmsRepository {
     }
   }
 
-  /**
-   * Get order by order ID
-   */
-  async getOrderById(orderId: string): Promise<OmsOrderResponse> {
-    try {
-      return await this.httpUtilService.get<OmsOrderResponse>(
-        `${this.baseUrl}/order/${orderId}`,
-        { params: { 'response-format': 'sdk' } },
-      );
-    } catch (error: any) {
-      throw new Error(
-        `Failed to fetch OMS order [orderId=${orderId}]: ${error?.message || error}`,
-      );
-    }
-  }
+ 
 
   
 }
