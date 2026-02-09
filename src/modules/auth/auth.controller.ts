@@ -6,7 +6,6 @@ import {
   Post,
   UnauthorizedException,
 } from '@nestjs/common';
-import * as bcrypt from 'bcryptjs';
 import { AuthService } from './auth.service';
 
 type TokenRequestBody = {
@@ -24,26 +23,22 @@ export class AuthController {
     const password = body?.password;
 
     if (!username || !password) {
-      throw new BadRequestException('Invalid username or password');
+      throw new BadRequestException('Username and password are required');
     }
 
-    // Expected to be a bcrypt hash (like your Express example).
-    const hashedPassword = process.env.TOKEN_PASSWORD;
-    const tokenUsername = process.env.TOKEN_USERNAME;
+    try {
+      const token = await this.authService.generateToken(username);
+      return { token };
+    } catch (error: any) {
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
 
-    if (!hashedPassword || !tokenUsername) {
-      throw new InternalServerErrorException('TOKEN_USERNAME/TOKEN_PASSWORD not set');
+      if (error instanceof InternalServerErrorException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException('Authentication failed');
     }
-
-    const ok =
-      username === tokenUsername && (await bcrypt.compare(password, hashedPassword));
-
-    if (!ok) {
-      throw new UnauthorizedException('Invalid username or password!');
-    }
-
-    const token = this.authService.generateToken(username);
-    return { token };
   }
 }
-
